@@ -1,0 +1,16 @@
+seed: 42
+experiment_name: baseline_unsupervised
+output_dir: ./outputs
+batch_size: 8
+epochs: 80
+lr: 0.0002
+weight_decay: 0.0
+amp: true
+grad_clip: 1.0
+save_every: 5
+lambda:
+  recon: 1.0
+  color: 0.2
+  structure: 0.5
+  halo: 0.2
+  grad_excl: 0.2

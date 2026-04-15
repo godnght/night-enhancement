@@ -1,0 +1,9 @@
+checkpoint: ./outputs/best.pt
+save_images: true
+image_out_dir: ./outputs/eval_images
+metrics:
+  - mse
+  - psnr
+  - ssim
+  - ie
+  - niqe_placeholder

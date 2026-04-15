@@ -1,0 +1,12 @@
+name: lolv2
+root: ./data/LOLv2
+train_split: ./data/splits/lolv2_train.txt
+val_split: ./data/splits/lolv2_val.txt
+test_split: ./data/splits/lolv2_test.txt
+paired: true
+image_size: 256
+num_workers: 4
+pin_memory: true
+split_seed: 42
+val_ratio: 0.1
+test_ratio: 0.1
