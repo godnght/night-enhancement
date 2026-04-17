@@ -5,6 +5,7 @@ from typing import Dict
 
 import numpy as np
 import torch
+from skimage.metrics import structural_similarity as ssim_fn
 
 
 def mse(pred: torch.Tensor, target: torch.Tensor) -> float:
@@ -19,16 +20,17 @@ def psnr(pred: torch.Tensor, target: torch.Tensor, max_val: float = 1.0) -> floa
 
 
 def ssim(pred: torch.Tensor, target: torch.Tensor) -> float:
-    c1 = 0.01 ** 2
-    c2 = 0.03 ** 2
-    mu_x = pred.mean().item()
-    mu_y = target.mean().item()
-    var_x = pred.var().item()
-    var_y = target.var().item()
-    cov = ((pred - mu_x) * (target - mu_y)).mean().item()
-    num = (2 * mu_x * mu_y + c1) * (2 * cov + c2)
-    den = (mu_x * mu_x + mu_y * mu_y + c1) * (var_x + var_y + c2)
-    return float(num / (den + 1e-8))
+    # Expected shape: [B, C, H, W], value range [0, 1].
+    pred_np = pred.detach().cpu().numpy()
+    target_np = target.detach().cpu().numpy()
+
+    b = pred_np.shape[0]
+    scores = []
+    for i in range(b):
+        x = np.transpose(pred_np[i], (1, 2, 0))
+        y = np.transpose(target_np[i], (1, 2, 0))
+        scores.append(ssim_fn(x, y, data_range=1.0, channel_axis=2))
+    return float(np.mean(scores))
 
 
 def information_entropy(img: torch.Tensor) -> float:
